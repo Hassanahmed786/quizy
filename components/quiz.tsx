@@ -153,13 +153,17 @@ export default function Quiz({
               >
                 {!isSubmitted ? (
                   <div className="space-y-8">
-                    <QuestionCard
-                      question={currentQuestion}
-                      selectedAnswer={answers[currentQuestionIndex]}
-                      onSelectAnswer={handleSelectAnswer}
-                      isSubmitted={isSubmitted}
-                      showCorrectAnswer={false}
-                    />
+                    {currentQuestion ? (
+                      <QuestionCard
+                        question={currentQuestion}
+                        selectedAnswer={answers[currentQuestionIndex]}
+                        onSelectAnswer={handleSelectAnswer}
+                        isSubmitted={isSubmitted}
+                        showCorrectAnswer={false}
+                      />
+                    ) : (
+                      <div className="text-red-500">Invalid question data.</div>
+                    )}
                     <div className="flex justify-between items-center pt-4">
                       <Button
                         onClick={handlePreviousQuestion}
