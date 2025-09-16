@@ -24,9 +24,8 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function ChatWithFiles() {
   const [files, setFiles] = useState<File[]>([]);
   const [questionCount, setQuestionCount] = useState<number>(4); // Default to 4 questions
-  const [questions, setQuestions] = useState<z.infer<typeof questionsSchema>>(
-    [],
-  );
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [questions, setQuestions] = useState<z.infer<typeof questionsSchema>>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [title, setTitle] = useState<string>();
 
@@ -101,7 +100,7 @@ export default function ChatWithFiles() {
         data: await encodeFileAsBase64(file),
       })),
     );
-    submit({ files: encodedFiles, questionCount }); // Pass questionCount to the API route
+  submit({ files: encodedFiles, questionCount, difficulty }); // Pass questionCount and difficulty to the API route
     const generatedTitle = await generateQuizTitle(encodedFiles[0].name);
     setTitle(generatedTitle);
   };
@@ -289,10 +288,7 @@ export default function ChatWithFiles() {
 
               {/* Number of Questions Input */}
               <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="questionCount"
-                  className="text-sm font-medium text-white"
-                >
+                <label htmlFor="questionCount" className="text-sm font-medium text-white">
                   Number of Questions (1-20):
                 </label>
                 <input
@@ -301,12 +297,27 @@ export default function ChatWithFiles() {
                   min={1}
                   max={20}
                   value={questionCount}
-                  onChange={(e) =>
-                    setQuestionCount(Math.max(1, Math.min(20, Number(e.target.value)))) // Clamped input
-                  }
+                  onChange={e => setQuestionCount(Math.max(1, Math.min(20, Number(e.target.value))))}
                   className="w-full rounded-md px-4 py-2 bg-zinc-700/50 border border-zinc-600 text-white focus:ring-2 focus:ring-primary-foreground focus:border-transparent transition-colors"
                   disabled={isLoading}
                 />
+              </div>
+              {/* Difficulty Selection */}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="difficulty" className="text-sm font-medium text-white">
+                  Difficulty:
+                </label>
+                <select
+                  id="difficulty"
+                  value={difficulty}
+                  onChange={e => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+                  className="w-full rounded-md px-4 py-2 bg-zinc-700/50 border border-zinc-600 text-white focus:ring-2 focus:ring-primary-foreground focus:border-transparent transition-colors"
+                  disabled={isLoading}
+                >
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
               </div>
 
               <Button
@@ -371,10 +382,10 @@ export default function ChatWithFiles() {
             </Link>{" "}
             &{" "}
             <Link
-              href="https://ai.google.dev"
+              href="https://azure.microsoft.com/en-us/products/ai-services/openai-service/"
               className="text-primary-foreground hover:underline"
             >
-              Google Gemini
+              Azure OpenAI
             </Link>
             .
           </p>

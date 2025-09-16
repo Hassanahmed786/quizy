@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import QuizScore from "./score";
 import QuizReview from "./quiz-overview";
+import QuizFeedback from "./quiz-feedback";
+import OpenAIReview from "./openai-review";
 import { Question } from "@/lib/schemas";
 
 type QuizProps = {
@@ -195,6 +197,8 @@ export default function Quiz({
                     />
                     <div className="space-y-12">
                       <QuizReview questions={questions} userAnswers={answers} />
+                      <QuizFeedback questions={questions} userAnswers={answers} />
+                      <OpenAIReview questions={questions} userAnswers={answers} />
                     </div>
                     <div className="flex justify-center space-x-4 pt-4">
                       <Button
